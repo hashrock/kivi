@@ -1,0 +1,295 @@
+/* Copyright 2018-2022 the Deno authors. All rights reserved. MIT license. */
+
+body,
+html {
+  background-color: transparent;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+#app {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: hidden;
+}
+
+.nav {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem;
+  position: relative;
+}
+
+.nav__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  max-width: max-content;
+  cursor: pointer;
+  background: transparent;
+}
+.nav__button:hover {
+  background-color: var(--vscode-list-hoverBackground);
+  border-radius: 0.25rem;
+}
+
+.nav__item {
+  background: transparent;
+}
+.nav__item--selected {
+  border-bottom: 2px solid #666;
+}
+.nav__back-home {
+}
+.nav__new-item {
+}
+.nav__openmenu {
+}
+
+.nav__title {
+  font-size: 1em;
+  font-weight: bold;
+  flex: 1;
+}
+
+.form__wrapper {
+  display: flex;
+}
+
+.form__query {
+  flex: 1;
+}
+
+.form__submit {
+  width: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.page {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: hidden;
+  overflow-x: hidden;
+}
+
+.result__wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: hidden;
+}
+
+.result {
+  flex: 1;
+  overflow-x: hidden;
+}
+.result__item {
+  border-bottom: 1px solid #666;
+  padding: 0.5rem 0.25rem;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+.result__item:hover {
+  background-color: var(--vscode-list-hoverBackground);
+  cursor: pointer;
+}
+
+.result__item__key {
+  display: inline;
+}
+
+.key--string {
+}
+.key--number {
+  color: #d59bff;
+}
+/* .result__item__key__strict {
+  display: none;
+}
+
+.result__item:hover .result__item__key__strict {
+  display: inline;
+}
+.result__item:hover .result__item__key__simple {
+  display: none;
+} */
+
+.result__item__value {
+  margin-left: 0.5rem;
+  display: inline;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: rgb(152, 166, 194);
+}
+
+.new__wrapper {
+  overflow-x: hidden;
+  flex: 1;
+}
+
+.single__wrapper {
+  flex: 1;
+}
+.icon {
+  flex: none;
+}
+
+.newform__wrapper {
+}
+
+.label {
+  font-weight: bold;
+  font-size: 0.75rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0.25rem;
+}
+
+.single__value {
+  margin-top: 1rem;
+}
+
+.single__value__type {
+  background-color: transparent;
+  color: white;
+  padding: 0.25rem;
+}
+
+.single__value-checker {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.message--error {
+  color: #eb3e3e;
+}
+.message--success {
+  color: #87e587;
+}
+
+textarea.single__value__textarea {
+  height: 10rem;
+  flex: 1;
+  padding: 0.25rem;
+  color: #c2c1ff;
+}
+
+.single__value__wrapper {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.single__key {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.single__key__textarea {
+  flex: 1;
+  font-size: 110%;
+  color: #e9e4ca;
+}
+
+.value-column {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+}
+
+.value-column .label {
+  flex: 1;
+}
+
+.single__key__textarea:read-only {
+  border: 1px solid #666;
+  border-radius: 4px;
+  background-color: transparent;
+}
+.single__key__textarea:focus {
+  /* background-color: var(--vscode-inputValidation-infoBackground); */
+}
+
+.database__wrapper {
+  color: #d199ff;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  cursor: pointer;
+}
+
+.database__wrapper:hover {
+  background-color: var(--vscode-list-hoverBackground);
+}
+.database {
+  padding: 0.5rem 0rem;
+}
+
+.modal {
+  display: flex;
+}
+
+.modal-enter {
+  opacity: 0;
+  transform: translateX(50%);
+}
+.modal-enter-active {
+  opacity: 1;
+  flex: 1;
+  transform: translateX(0);
+  transition: opacity 600ms, transform 200ms ease-out;
+}
+.modal-enter-done {
+  flex: 1;
+}
+
+.single__versionstamp {
+  font-family: monospace;
+  font-size: 90%;
+  color: #959595;
+}
+
+span.doc {
+  margin-left: 0.25rem;
+}
+
+span.doc a {
+  font-weight: normal;
+  color: #959595;
+}
+
+.nav__menu {
+  position: absolute;
+  display: none;
+  top: 100%;
+  right: 0;
+  background-color: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-editorWidget-border);
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+}
+.nav__menu--open {
+  display: block;
+}
+.nav__menu__item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 0.25rem;
+  padding: 0.25rem;
+  cursor: pointer;
+}
+.nav__menu__item:hover {
+  background-color: var(--vscode-list-hoverBackground);
+  border-radius: 0.25rem;
+}

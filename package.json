@@ -1,0 +1,85 @@
+{
+  "name": "deno-kv-admin",
+  "displayName": "Deno KV Admin",
+  "description": "Deno KV viewer and editor",
+  "repository": "https://github.com/hashrock/deno-kv-admin",
+  "license": "MIT",
+  "version": "0.0.1",
+  "publisher": "hashrock",
+  "icon": "logo.png",
+  "engines": {
+    "vscode": "^1.81.0"
+  },
+  "categories": [
+    "Other",
+    "Snippets"
+  ],
+  "keywords": [
+    "deno",
+    "kv"
+  ],
+  "activationEvents": [
+    "workspaceContains:deno.json"
+  ],
+  "contributes": {
+    "views": {
+      "deno-kv-admin": [
+        {
+          "type": "webview",
+          "id": "hashrock.deno.kvView",
+          "name": "KV Explorer"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "deno-kv-admin",
+          "title": "Deno KV Admin",
+          "icon": "media/deno-sidebar.svg"
+        }
+      ]
+    },
+    "commands": [],
+    "menus": {
+      "explorer/context": []
+    }
+  },
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js",
+    "changelog": "npx standard-version",
+    "kv:build": "esbuild kv/src/main.tsx --bundle --outfile=media/kv/main.js --minify"
+  },
+  "devDependencies": {
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/node-fetch": "^2.6.6",
+    "@types/react": "^18.2.25",
+    "@types/react-dom": "^18.2.10",
+    "@types/react-transition-group": "^4.4.7",
+    "@types/vscode": "^1.81.0",
+    "@types/vscode-webview": "^1.57.2",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
+    "@vscode/test-electron": "^2.3.4",
+    "classnames": "^2.3.2",
+    "esbuild": "0.19.4",
+    "eslint": "^8.47.0",
+    "glob": "^10.3.3",
+    "mocha": "^10.2.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-transition-group": "^4.4.5",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0",
+    "superjson": "^1.13.3"
+  }
+}
