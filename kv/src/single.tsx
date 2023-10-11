@@ -34,7 +34,7 @@ export function PageSingle(props: PageSingleProps) {
   const [message, setMessage] = useState<Message | null>(null);
   const [valueType, setValueType] = useState<ValueType>("string");
 
-  const isValidValueType = useCallback((value: unknown): valueCheckResult => {
+  const isValidValueType = (value: unknown): valueCheckResult => {
     if (valueType === "string") {
       return {
         isValid: true,
@@ -83,7 +83,7 @@ export function PageSingle(props: PageSingleProps) {
       isValid: false,
       reason: "unknown valueType",
     };
-  }, []);
+  };
 
   const eventHandler = useCallback((event: MessageEvent) => {
     console.log("eventHandler");
@@ -277,6 +277,11 @@ console.log(res.versionstamp);`;
                   message: "The item set successfully : " + new Date(),
                   level: "success",
                 });
+              }
+              const kvGetResult = await kvGet(newKey);
+              if (kvGetResult) {
+                setValue(JSON.stringify(kvGetResult.value, null, 2));
+                setVersionstamp(kvGetResult.versionstamp);
               }
             }
           } catch (e) {
