@@ -85,31 +85,6 @@ export function PageSingle(props: PageSingleProps) {
     };
   };
 
-  const eventHandler = useCallback((event: MessageEvent) => {
-    console.log("eventHandler");
-
-    const message = event.data; // The json data that the extension sent
-
-    if (!selectedKey) {
-      return;
-    }
-
-    switch (message.type) {
-      case "getResult": {
-        break;
-      }
-      case "deleteResult": {
-        if (message.result === "OK") {
-          setMessage({
-            message: "The item deleted successfully : " + new Date(),
-            level: "success",
-          });
-        }
-        break;
-      }
-    }
-  }, []);
-
   useEffect(() => {
     if (selectedKey) {
       kvGet(selectedKey).then((result) => {
