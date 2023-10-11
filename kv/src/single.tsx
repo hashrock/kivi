@@ -146,11 +146,17 @@ console.log(res.versionstamp);`;
     context.setMenuItems([
       {
         title: "Delete this item",
-        onClick: () => {
+        onClick: async () => {
           if (!selectedKey) {
             return;
           }
-          kvDelete(selectedKey);
+          const result = await kvDelete(selectedKey);
+          if (result === "OK") {
+            setMessage({
+              message: "The item deleted successfully : " + new Date(),
+              level: "success",
+            });
+          }
         },
       },
       {
