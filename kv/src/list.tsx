@@ -8,7 +8,7 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { KvKey, kvList, showMessage } from "./api";
+import { KvKey, kvList, KvPair, showMessage } from "./api";
 import { IconSearch, Spinner } from "./icons";
 import { AppContext, MenuContext } from "./context";
 import { kvKeyToString, queryToKvPrefix } from "./utils";
@@ -90,10 +90,7 @@ function PageListResultItem(props: PageListResultItemProps) {
 }
 
 interface PageListResultProps {
-  items: {
-    key: KvKey;
-    value: string;
-  }[];
+  items: KvPair[];
   onChangeSelectedKey: (key: KvKey) => void;
 }
 function PageListResult(props: PageListResultProps) {
@@ -139,7 +136,7 @@ for await (const entry of cur) {
 }
 
 export function PageList(props: PageListProps) {
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState<KvPair[]>([]);
   const appContext = useContext(AppContext);
   const context = useContext(MenuContext);
 
@@ -165,28 +162,13 @@ export function PageList(props: PageListProps) {
     }]);
   }, [context, props.prefix, items]);
 
-  const handleMessage = useCallback((event: MessageEvent) => {
-    const message = event.data; // The json data that the extension sent
-    switch (message.type) {
-      case "listResult": {
-        setItems(message.result);
-        appContext.setIsBusy(false);
-        break;
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    window.addEventListener("message", handleMessage);
-
-    return () => {
-      window.removeEventListener("message", handleMessage);
-    };
-  }, []);
-
   useEffect(() => {
     appContext.setIsBusy(true);
-    kvList(props.prefix ?? []);
+    (async () => {
+      const result = await kvList(props.prefix ?? []);
+      setItems(result);
+      appContext.setIsBusy(false);
+    })();
   }, [props.database, props.prefix]);
 
   return (

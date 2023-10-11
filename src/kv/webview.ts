@@ -49,6 +49,7 @@ export class KvViewProvider implements vscode.WebviewViewProvider {
       const key = data.key;
       const value = data.value;
       const database = data.database;
+      const id = data.id;
 
       if (type === "message") {
         vscode.window.showInformationMessage(data.message);
@@ -101,32 +102,44 @@ export class KvViewProvider implements vscode.WebviewViewProvider {
 
       if (type === "list") {
         webviewView.webview.postMessage({
+          id,
           type: "listResult",
           result: result,
         });
       }
       if (type === "set") {
         webviewView.webview.postMessage({
+          id,
           type: "setResult",
           result: result.result,
         });
       }
       if (type === "get") {
         webviewView.webview.postMessage({
+          id,
           type: "getResult",
           result: result,
         });
       }
       if (type === "delete") {
         webviewView.webview.postMessage({
+          id,
           type: "deleteResult",
           result: result.result,
         });
       }
       if (type === "changeDatabase") {
         webviewView.webview.postMessage({
+          id,
           type: "changeDatabaseResult",
           result: requestJson.database,
+        });
+      }
+      if (type === "message") {
+        webviewView.webview.postMessage({
+          id,
+          type: "messageResult",
+          result: "OK",
         });
       }
     });
