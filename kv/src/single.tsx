@@ -280,7 +280,11 @@ console.log(res.versionstamp);`;
                 }
                 const kvGetResult = await kvGet(newKey);
                 if (kvGetResult) {
-                  setValue(JSON.stringify(kvGetResult.value, null, 2));
+                  if (typeof kvGetResult.value === "object") {
+                    setValue(JSON.stringify(kvGetResult.value, null, 2));
+                  } else {
+                    setValue(kvGetResult.value);
+                  }
                   setVersionstamp(kvGetResult.versionstamp);
                 }
               }
