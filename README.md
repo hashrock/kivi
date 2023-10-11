@@ -8,4 +8,4 @@ Nothing
 
 ## Known Issues
 
-None
+- Object like `Date` or `Uint8Array` will not preserved in the edit feature for now.
