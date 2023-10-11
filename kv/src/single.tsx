@@ -15,7 +15,6 @@ interface valueCheckResult {
 }
 
 interface PageSingleProps {
-  page: PageType;
   selectedKey?: KvKey;
   isNewItem?: boolean;
   onSaveNewItem?: (key: KvKey, value: unknown) => void;
@@ -144,7 +143,7 @@ console.log(res.versionstamp);`;
     },
   }];
 
-  const single = (
+  const newItem = (
     <>
       <BackHome
         onClick={() => props.onChangePage("list")}
@@ -154,7 +153,7 @@ console.log(res.versionstamp);`;
       </div>
     </>
   );
-  const newpage = (
+  const editItem = (
     <>
       <BackHome
         onClick={() => props.onChangePage("list")}
@@ -171,11 +170,10 @@ console.log(res.versionstamp);`;
   return (
     <>
       <Nav
-        page="single"
         menuItems={menus}
         onChangePage={(page) => props.onChangePage(page)}
       >
-        {isNewItem ? newpage : single}
+        {isNewItem ? newItem : editItem}
       </Nav>
       <div className="single__wrapper">
         <div className="label">

@@ -42,7 +42,6 @@ function Menu(props: React.ButtonHTMLAttributes<HTMLButtonElement>) {
 }
 
 interface NavProps {
-  page: PageType;
   onChangePage: (page: PageType) => void;
   children?: React.ReactNode[] | React.ReactNode;
   menuItems: MenuItemProps[];
