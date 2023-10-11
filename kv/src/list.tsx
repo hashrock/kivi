@@ -1,27 +1,21 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // Copyright 2018-2022 the Deno authors. All rights reserved. MIT license.
 
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { KvKey, kvList, KvPair, showMessage } from "./api";
 import { IconSearch, Spinner } from "./icons";
-import { AppContext, MenuContext } from "./context";
 import { kvKeyToString, queryToKvPrefix } from "./utils";
+import { Nav, NewItem } from "./nav";
+import { PageType } from "./main";
 
 interface PageListFormProps {
   prefix: KvKey;
   onSubmit: (key: string) => void;
+  isBusy: boolean;
 }
 
 function PageListForm(props: PageListFormProps) {
   const searchKeyRef = useRef<HTMLInputElement | null>(null);
-
-  const appContext = useContext(AppContext);
 
   useEffect(() => {
     if (searchKeyRef.current === null) {
@@ -52,7 +46,7 @@ function PageListForm(props: PageListFormProps) {
         defaultValue={keyString}
       />
       <button className="form__submit" type="submit">
-        {appContext.isBusy
+        {props.isBusy
           ? <Spinner width={16} height={16} stroke="white" />
           : <IconSearch width={16} height={16} />}
       </button>
@@ -119,6 +113,7 @@ interface PageListProps {
   onChangeSelectedKey: (key: KvKey) => void;
   prefix: KvKey;
   onChangePrefix: (prefix: KvKey) => void;
+  onChangePage: (page: PageType) => void;
 }
 
 function getExampleCode(selectedKey: KvKey) {
@@ -137,55 +132,63 @@ for await (const entry of cur) {
 
 export function PageList(props: PageListProps) {
   const [items, setItems] = useState<KvPair[]>([]);
-  const appContext = useContext(AppContext);
-  const context = useContext(MenuContext);
+  const [isBusy, setIsBusy] = useState<boolean>(false);
+
+  const menus = [{
+    title: "Copy code with kv.list",
+    onClick: () => {
+      navigator.clipboard.writeText(getExampleCode(props.prefix ?? []));
+      showMessage("Copied!");
+    },
+  }, {
+    title: "Export JSON",
+    onClick: () => {
+      const blob = new Blob([JSON.stringify(items, null, 2)], {
+        type: "application/json",
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "kv.json";
+      a.click();
+    },
+  }];
 
   useEffect(() => {
-    context.setMenuItems([{
-      title: "Copy code with kv.list",
-      onClick: () => {
-        navigator.clipboard.writeText(getExampleCode(props.prefix ?? []));
-        showMessage("Copied!");
-      },
-    }, {
-      title: "Export JSON",
-      onClick: () => {
-        const blob = new Blob([JSON.stringify(items, null, 2)], {
-          type: "application/json",
-        });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = "kv.json";
-        a.click();
-      },
-    }]);
-  }, [context, props.prefix, items]);
-
-  useEffect(() => {
-    appContext.setIsBusy(true);
+    setIsBusy(true);
     (async () => {
       const result = await kvList(props.prefix ?? []);
       setItems(result);
-      appContext.setIsBusy(false);
+      setIsBusy(false);
     })();
-  }, [props.database, props.prefix]);
+  }, [props.prefix]);
 
   return (
-    <div className="result__wrapper">
-      <PageListForm
-        prefix={props.prefix}
-        onSubmit={(key) => {
-          const parsed = queryToKvPrefix(key);
-          props.onChangePrefix(parsed);
-        }}
-      />
-      <PageListResult
-        items={items}
-        onChangeSelectedKey={(key) => {
-          props.onChangeSelectedKey(key);
-        }}
-      />
-    </div>
+    <>
+      <Nav page="list" onChangePage={props.onChangePage} menuItems={menus}>
+        <div className="nav__title">
+          Items
+        </div>
+        <NewItem
+          onClick={() => props.onChangePage("new")}
+        />
+      </Nav>
+      <div className="result__wrapper">
+        <PageListForm
+          isBusy={isBusy}
+          prefix={props.prefix}
+          onSubmit={(key) => {
+            const parsed = queryToKvPrefix(key);
+            props.onChangePrefix(parsed);
+          }}
+        />
+        <PageListResult
+          items={items}
+          onChangeSelectedKey={(key) => {
+            props.onChangeSelectedKey(key);
+          }}
+        />
+      </div>
+    </>
   );
 }
