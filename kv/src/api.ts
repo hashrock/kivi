@@ -7,6 +7,7 @@ export type KvValue = unknown;
 export interface KvPair {
   key: KvKey;
   value: string;
+  versionstamp: string;
 }
 
 let id = 0;
@@ -42,8 +43,8 @@ export function kvSet(key: KvKey, value: KvValue) {
   return postMessageParent("set", { key, value });
 }
 
-export function kvGet(key: KvKey) {
-  return postMessageParent("get", { key });
+export function kvGet(key: KvKey): Promise<KvPair> {
+  return postMessageParent("get", { key }) as Promise<KvPair>;
 }
 
 export function kvDelete(key: KvKey) {

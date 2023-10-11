@@ -96,19 +96,6 @@ export function PageSingle(props: PageSingleProps) {
 
     switch (message.type) {
       case "getResult": {
-        const value = message.result.value;
-        let valueType: ValueType = "string";
-        if (typeof value === "object") {
-          valueType = "json";
-          setValue(JSON.stringify(value, null, 2));
-        } else if (typeof value === "number") {
-          valueType = "number";
-          setValue(String(value));
-        } else {
-          setValue(value);
-        }
-        setValueType(valueType);
-        setVersionstamp(message.result.versionstamp);
         break;
       }
       case "deleteResult": {
@@ -123,45 +110,25 @@ export function PageSingle(props: PageSingleProps) {
     }
   }, []);
 
-  const eventUpdateHandler = useCallback((event: MessageEvent) => {
-    console.log("eventUpdateHandler");
-
-    const message = event.data; // The json data that the extension sent
-    switch (message.type) {
-      case "setResult": {
-        if (message.result === "OK") {
-          setIsNewItem(false);
-          setMessage({
-            message: "The item set successfully : " + new Date(),
-            level: "success",
-          });
-          if (newKey) {
-            kvGet(newKey);
-          }
-          if (selectedKey) {
-            kvGet(selectedKey);
-          }
-        }
-        break;
-      }
-    }
-  }, [selectedKey]);
-
   useEffect(() => {
     if (selectedKey) {
-      kvGet(selectedKey);
+      kvGet(selectedKey).then((result) => {
+        const value = result.value;
+        let valueType: ValueType = "string";
+        if (typeof value === "object") {
+          valueType = "json";
+          setValue(JSON.stringify(value, null, 2));
+        } else if (typeof value === "number") {
+          valueType = "number";
+          setValue(String(value));
+        } else {
+          setValue(value);
+        }
+        setValueType(valueType);
+        setVersionstamp(result.versionstamp);
+      });
     }
   }, [selectedKey]);
-
-  useEffect(() => {
-    window.addEventListener("message", eventUpdateHandler);
-    window.addEventListener("message", eventHandler);
-
-    return () => {
-      window.removeEventListener("message", eventHandler);
-      window.removeEventListener("message", eventUpdateHandler);
-    };
-  }, []);
 
   const context = useContext(MenuContext);
 
@@ -280,7 +247,7 @@ console.log(res.versionstamp);`;
       </div>
       <button
         className="single__update"
-        onClick={() => {
+        onClick={async () => {
           if (!newKey) {
             setMessage({ message: "Key is empty", level: "error" });
             return;
@@ -295,7 +262,16 @@ console.log(res.versionstamp);`;
           setSelectedKey(newKey);
           try {
             if (value !== null) {
-              kvSetWithType(newKey, value, valueType);
+              const result = await kvSet(
+                newKey,
+                kvConvertSetWithType(value, valueType),
+              );
+              if (result === "OK") {
+                setMessage({
+                  message: "The item set successfully : " + new Date(),
+                  level: "success",
+                });
+              }
             }
           } catch (e) {
             if (e instanceof Error) {
@@ -314,13 +290,13 @@ console.log(res.versionstamp);`;
     </div>
   );
 
-  function kvSetWithType(key: KvKey, value: string, valueType: ValueType) {
+  function kvConvertSetWithType(value: string, valueType: ValueType) {
     if (valueType === "string") {
-      kvSet(key, value);
+      return value;
     } else if (valueType === "number") {
-      kvSet(key, Number(value));
+      return Number(value);
     } else if (valueType === "json" && value) {
-      kvSet(key, JSON.parse(value));
+      return JSON.parse(value);
     } else {
       throw new Error("unknown type");
     }
