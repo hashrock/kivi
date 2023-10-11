@@ -80,7 +80,6 @@ export type PageType = "list" | "new" | "single";
             {page === "new" && (
               <PageSingle
                 isNewItem
-                page="new"
                 onChangePage={(page) => setPage(page)}
                 onSaveNewItem={(key, value) => {
                   setSelectedKey(key);
@@ -91,7 +90,6 @@ export type PageType = "list" | "new" | "single";
             {page === "single" && (
               <PageSingle
                 onChangePage={(page) => setPage(page)}
-                page="single"
                 selectedKey={selectedKey}
               />
             )}

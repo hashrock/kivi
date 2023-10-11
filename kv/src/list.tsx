@@ -165,7 +165,7 @@ export function PageList(props: PageListProps) {
 
   return (
     <>
-      <Nav page="list" onChangePage={props.onChangePage} menuItems={menus}>
+      <Nav onChangePage={props.onChangePage} menuItems={menus}>
         <div className="nav__title">
           Items
         </div>
