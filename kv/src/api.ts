@@ -16,7 +16,7 @@ export async function postMessageParent(type: string, body: object) {
   id++;
 
   return new Promise((resolve, reject) => {
-    const timeoutSec = 5;
+    const timeoutSec = 60; // TODO databaseChange will timeout but user may still pending to select database
     const onTimedout = setTimeout(() => {
       reject(`Timeout: ${timeoutSec} seconds.`);
     }, timeoutSec * 1000);
@@ -56,7 +56,8 @@ export function kvList(key: KvKey): Promise<KvPair[]> {
 }
 
 export function kvRequestChangeDatabase() {
-  return postMessageParent("changeDatabase", {});
+  // null is cancel
+  return postMessageParent("changeDatabase", {}) as Promise<string | null>;
 }
 
 export function showMessage(message: string) {
