@@ -4,7 +4,7 @@
   "description": "Deno KV viewer and editor",
   "repository": "https://github.com/hashrock/deno-kv-admin",
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "publisher": "hashrock",
   "icon": "logo.png",
   "engines": {
@@ -80,6 +80,6 @@
   },
   "dependencies": {
     "node-fetch": "^2.7.0",
-    "superjson": "^1.13.3"
+    "superjson": "1.13.3"
   }
 }

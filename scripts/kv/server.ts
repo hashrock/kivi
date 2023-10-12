@@ -3,7 +3,7 @@
 
 import "https://deno.land/std@0.203.0/dotenv/load.ts";
 import { load } from "https://deno.land/std@0.203.0/dotenv/mod.ts";
-import superjson from "npm:superjson";
+import superjson from "npm:superjson@1.13.3";
 
 let db = await Deno.openKv();
 
