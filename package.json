@@ -54,7 +54,7 @@
     "lint": "eslint src --ext ts",
     "test": "node ./out/test/runTest.js",
     "changelog": "npx standard-version",
-    "kv:build": "esbuild kv/src/main.tsx --bundle --outfile=media/kv/main.js --minify"
+    "kv:build": "esbuild kv/src/main.tsx --bundle --outfile=media/kv/main.js --minify --sourcemap=inline"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.1",
