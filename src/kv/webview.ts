@@ -99,8 +99,10 @@ export class KvViewProvider implements vscode.WebviewViewProvider {
         },
       });
       if (!response.ok) {
-        vscode.window.showErrorMessage(`KV Viewer: ${response.statusText}`);
-        return;
+        const errorMessage = await response.text();
+        vscode.window.showErrorMessage(`KV Viewer: ${errorMessage}`);
+
+        throw new Error(errorMessage);
       }
       const result = superjson.parse<ResponseJson>(await response.text());
 
