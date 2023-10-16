@@ -56,3 +56,63 @@ export function queryToKvPrefix(input: string): KvKey {
 export function kvKeyToString(key: KvKey): string {
   return key.map((i) => i.toString()).join(",");
 }
+
+export type ValueType = "string" | "json" | "number";
+
+export interface ValueCheckResult {
+  isValid: boolean;
+  reason: string;
+}
+export function isValidValueType(
+  value: unknown,
+  valueType: string,
+): ValueCheckResult {
+  if (valueType === "string") {
+    return {
+      isValid: true,
+      reason: "string is always valid",
+    };
+  }
+  if (valueType === "number") {
+    if (value === null || value === undefined) {
+      return {
+        isValid: false,
+        reason: "number cannot be null",
+      };
+    }
+    if (Number.isNaN(parseFloat(value as string))) {
+      return {
+        isValid: false,
+        reason: "invalid number",
+      };
+    }
+    return {
+      isValid: true,
+      reason: "OK",
+    };
+  }
+  if (valueType === "json") {
+    if (value === null) {
+      return {
+        isValid: false,
+        reason: "json cannot be null",
+      };
+    }
+    try {
+      JSON.parse(value as string);
+    } catch (e) {
+      return {
+        isValid: false,
+        reason: "invalid json",
+      };
+    }
+    return {
+      isValid: true,
+      reason: "OK",
+    };
+  }
+  return {
+    isValid: false,
+    reason: "unknown valueType",
+  };
+}
