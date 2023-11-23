@@ -110,7 +110,7 @@ export class KvViewProvider implements vscode.WebviewViewProvider {
         webviewView.webview.postMessage({
           id,
           type: "listResult",
-          result: result,
+          result: superjson.stringify(result),
         });
       }
       if (type === "set") {
@@ -124,7 +124,7 @@ export class KvViewProvider implements vscode.WebviewViewProvider {
         webviewView.webview.postMessage({
           id,
           type: "getResult",
-          result: result,
+          result: superjson.stringify(result),
         });
       }
       if (type === "delete") {

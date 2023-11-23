@@ -294,3 +294,16 @@ span.doc a {
   background-color: var(--vscode-list-hoverBackground);
   border-radius: 0.25rem;
 }
+
+.result__item__key__badge {
+  margin-left: 0.25rem;
+  padding: 0.25rem;
+  border-radius: 0.25rem;
+  background-color: #333;
+  color: white;
+  font-size: 0.75rem;
+}
+
+.result__item__key__badge--string {
+  color: #87e587;
+}
