@@ -1,5 +1,6 @@
 export const vscode = acquireVsCodeApi();
 
+import superjson from "superjson";
 export type KvKeyPart = Uint8Array | string | number | bigint | boolean;
 export type KvKey = KvKeyPart[];
 export type KvValue = unknown;
@@ -43,16 +44,18 @@ export function kvSet(key: KvKey, value: KvValue) {
   return postMessageParent("set", { key, value });
 }
 
-export function kvGet(key: KvKey): Promise<KvPair> {
-  return postMessageParent("get", { key }) as Promise<KvPair>;
+export async function kvGet(key: KvKey): Promise<KvPair> {
+  const resultStr = await (postMessageParent("get", { key })) as string;
+  return superjson.parse(resultStr);
 }
 
 export function kvDelete(key: KvKey) {
   return postMessageParent("delete", { key });
 }
 
-export function kvList(key: KvKey): Promise<KvPair[]> {
-  return postMessageParent("list", { key }) as Promise<KvPair[]>;
+export async function kvList(key: KvKey): Promise<KvPair[]> {
+  const resultStr = await (postMessageParent("list", { key })) as string;
+  return superjson.parse(resultStr);
 }
 
 export function kvRequestChangeDatabase() {

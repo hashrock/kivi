@@ -3,16 +3,9 @@
 
 import React, { useEffect, useState } from "react";
 import { kvDelete, kvGet, KvKey, kvSet } from "./api";
-import { queryToKvPrefix } from "./utils";
+import { isValidValueType, queryToKvPrefix, ValueType } from "./utils";
 import { BackHome, Nav, NewItem } from "./nav";
 import { PageType } from "./main";
-
-type ValueType = "string" | "json" | "number";
-
-interface valueCheckResult {
-  isValid: boolean;
-  reason: string;
-}
 
 interface PageSingleProps {
   selectedKey?: KvKey;
@@ -35,57 +28,6 @@ export function PageSingle(props: PageSingleProps) {
 
   const [message, setMessage] = useState<Message | null>(null);
   const [valueType, setValueType] = useState<ValueType>("string");
-
-  const isValidValueType = (value: unknown): valueCheckResult => {
-    if (valueType === "string") {
-      return {
-        isValid: true,
-        reason: "string is always valid",
-      };
-    }
-    if (valueType === "number") {
-      if (value === null || value === undefined) {
-        return {
-          isValid: false,
-          reason: "number cannot be null",
-        };
-      }
-      if (Number.isNaN(parseFloat(value as string))) {
-        return {
-          isValid: false,
-          reason: "invalid number",
-        };
-      }
-      return {
-        isValid: true,
-        reason: "OK",
-      };
-    }
-    if (valueType === "json") {
-      if (value === null) {
-        return {
-          isValid: false,
-          reason: "json cannot be null",
-        };
-      }
-      try {
-        JSON.parse(value as string);
-      } catch (e) {
-        return {
-          isValid: false,
-          reason: "invalid json",
-        };
-      }
-      return {
-        isValid: true,
-        reason: "OK",
-      };
-    }
-    return {
-      isValid: false,
-      reason: "unknown valueType",
-    };
-  };
 
   useEffect(() => {
     if (selectedKey) {
@@ -246,8 +188,8 @@ console.log(res.versionstamp);`;
           </div>
 
           <div className="single__value-checker">
-            {isValidValueType(value).isValid ? "" : (
-              `❌ ${isValidValueType(value).reason}`
+            {isValidValueType(value, valueType).isValid ? "" : (
+              `❌ ${isValidValueType(value, valueType).reason}`
             )}
           </div>
         </div>
@@ -258,9 +200,9 @@ console.log(res.versionstamp);`;
               setMessage({ message: "Key is empty", level: "error" });
               return;
             }
-            if (!isValidValueType(value).isValid) {
+            if (!isValidValueType(value, valueType).isValid) {
               setMessage({
-                message: isValidValueType(value).reason,
+                message: isValidValueType(value, valueType).reason,
                 level: "error",
               });
               return;

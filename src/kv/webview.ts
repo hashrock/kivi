@@ -99,8 +99,10 @@ export class KvViewProvider implements vscode.WebviewViewProvider {
         },
       });
       if (!response.ok) {
-        vscode.window.showErrorMessage(`KV Viewer: ${response.statusText}`);
-        return;
+        const errorMessage = await response.text();
+        vscode.window.showErrorMessage(`KV Viewer: ${errorMessage}`);
+
+        throw new Error(errorMessage);
       }
       const result = superjson.parse<ResponseJson>(await response.text());
 
@@ -108,7 +110,7 @@ export class KvViewProvider implements vscode.WebviewViewProvider {
         webviewView.webview.postMessage({
           id,
           type: "listResult",
-          result: result,
+          result: superjson.stringify(result),
         });
       }
       if (type === "set") {
@@ -122,7 +124,7 @@ export class KvViewProvider implements vscode.WebviewViewProvider {
         webviewView.webview.postMessage({
           id,
           type: "getResult",
-          result: result,
+          result: superjson.stringify(result),
         });
       }
       if (type === "delete") {

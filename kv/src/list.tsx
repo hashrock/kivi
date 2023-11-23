@@ -7,6 +7,7 @@ import { IconSearch, Spinner } from "./icons";
 import { kvKeyToString, queryToKvPrefix } from "./utils";
 import { Nav, NewItem } from "./nav";
 import { PageType } from "./main";
+import superjson from "superjson";
 
 interface PageListFormProps {
   prefix: KvKey;
@@ -74,11 +75,26 @@ function PageListResultItem(props: PageListResultItemProps) {
       <div className="result__item__key">
         {
           <span className="result__item__key__strict">
-            {item.key.map((i) => JSON.stringify(i)).join(",")}
+            {item.key.map((i) => {
+              const isString = typeof i === "string";
+              return isString
+                ? (
+                  <span className="result__item__key__badge result__item__key__badge--string">
+                    "{i}"
+                  </span>
+                )
+                : (
+                  <span className="result__item__key__badge">
+                    {i.toString()}
+                  </span>
+                );
+            })}
           </span>
         }
       </div>
-      <div className="result__item__value">{JSON.stringify(item.value)}</div>
+      <div className="result__item__value">
+        {JSON.stringify(item.value)}
+      </div>
     </div>
   );
 }
