@@ -52,7 +52,7 @@
     "watch": "tsc -watch -p ./",
     "pretest": "npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test": "node ./out/test/runTest.js",
+    "test": "node -r esbuild-runner/register kv/src/utils.test.ts",
     "changelog": "npx standard-version",
     "kv:build": "esbuild kv/src/main.tsx --bundle --outfile=media/kv/main.js --minify --sourcemap=inline"
   },
@@ -79,6 +79,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "esbuild-runner": "^2.2.2",
     "node-fetch": "^2.7.0",
     "superjson": "1.13.3"
   }
