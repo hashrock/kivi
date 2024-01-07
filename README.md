@@ -1,6 +1,6 @@
-# Deno KV Admin
+# Kivi
 
-Deno KV Explorer - experimental
+Deno KV Explorer
 
 ## Extension Settings
 
@@ -8,4 +8,4 @@ Nothing
 
 ## Known Issues
 
-- Object like `Date` or `Uint8Array` will not preserved in the edit feature for now.
+- Objects like `Date` or `Uint8Array` will not preserved in the edit feature for now.

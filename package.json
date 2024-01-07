@@ -1,10 +1,10 @@
 {
-  "name": "deno-kv-admin",
-  "displayName": "Deno KV Admin",
+  "name": "kivi",
+  "displayName": "kivi",
   "description": "Deno KV viewer and editor",
-  "repository": "https://github.com/hashrock/deno-kv-admin",
+  "repository": "https://github.com/hashrock/kivi",
   "license": "MIT",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "publisher": "hashrock",
   "icon": "logo.png",
   "engines": {
@@ -23,7 +23,7 @@
   ],
   "contributes": {
     "views": {
-      "deno-kv-admin": [
+      "kivi": [
         {
           "type": "webview",
           "id": "hashrock.deno.kvView",
@@ -34,8 +34,8 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "deno-kv-admin",
-          "title": "Deno KV Admin",
+          "id": "kivi",
+          "title": "Kivi",
           "icon": "media/deno-sidebar.svg"
         }
       ]
