@@ -91,6 +91,23 @@ export class KvViewProvider implements vscode.WebviewViewProvider {
         }
       }
 
+      if (type === "getConfig") {
+        const previewValue: boolean = vscode.workspace.getConfiguration("kivi")
+          .get("previewValue") as boolean;
+        const listFetchSize: number = vscode.workspace.getConfiguration("kivi")
+          .get("listFetchSize") as number;
+
+        webviewView.webview.postMessage({
+          id,
+          type: "getConfigResult",
+          result: JSON.stringify({
+            previewValue,
+            listFetchSize,
+          }),
+        });
+        return;
+      }
+
       const response = await fetch(url, {
         method: "POST",
         body: superjson.stringify(requestJson),

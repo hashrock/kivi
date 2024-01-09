@@ -43,6 +43,21 @@
     "commands": [],
     "menus": {
       "explorer/context": []
+    },
+    "configuration": {
+      "title": "Kivi",
+      "properties": {
+        "kivi.listFetchSize": {
+          "type": "number",
+          "default": 100,
+          "description": "The number of keys to fetch at a time."
+        },
+        "kivi.previewValue": {
+          "type": "boolean",
+          "default": true,
+          "description": "Whether to preview values in the explorer."
+        }
+      }
     }
   },
   "main": "./out/extension.js",

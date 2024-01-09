@@ -2,7 +2,15 @@
 // Copyright 2018-2022 the Deno authors. All rights reserved. MIT license.
 
 import React, { useEffect, useRef, useState } from "react";
-import { KvKey, kvList, KvPair, showMessage } from "./api";
+import {
+  Config,
+  getConfig,
+  KvKey,
+  kvList,
+  KvPair,
+  showMessage,
+  vscode,
+} from "./api";
 import { IconSearch, Spinner } from "./icons";
 import { kvKeyToString, queryToKvPrefix } from "./utils";
 import { Nav, NewItem } from "./nav";
@@ -61,6 +69,7 @@ interface PageListResultItemProps {
     value: string;
   };
   onChangeSelectedKey: (key: KvKey) => void;
+  previewValue?: boolean;
 }
 function PageListResultItem(props: PageListResultItemProps) {
   const item = props.item;
@@ -92,9 +101,11 @@ function PageListResultItem(props: PageListResultItemProps) {
           </span>
         }
       </div>
-      <div className="result__item__value">
-        {JSON.stringify(item.value)}
-      </div>
+      {props.previewValue && (
+        <div className="result__item__value">
+          {JSON.stringify(item.value)}
+        </div>
+      )}
     </div>
   );
 }
@@ -102,6 +113,7 @@ function PageListResultItem(props: PageListResultItemProps) {
 interface PageListResultProps {
   items: KvPair[];
   onChangeSelectedKey: (key: KvKey) => void;
+  previewValue?: boolean;
 }
 function PageListResult(props: PageListResultProps) {
   const items = props.items;
@@ -118,6 +130,7 @@ function PageListResult(props: PageListResultProps) {
           key={kvKeyToString(item.key)}
           item={item}
           onChangeSelectedKey={(key) => props.onChangeSelectedKey(key)}
+          previewValue={props.previewValue}
         />
       ))}
     </div>
@@ -130,6 +143,7 @@ interface PageListProps {
   prefix: KvKey;
   onChangePrefix: (prefix: KvKey) => void;
   onChangePage: (page: PageType) => void;
+  config: Config;
 }
 
 function getExampleCode(selectedKey: KvKey) {
@@ -198,12 +212,15 @@ export function PageList(props: PageListProps) {
             props.onChangePrefix(parsed);
           }}
         />
-        <PageListResult
-          items={items}
-          onChangeSelectedKey={(key) => {
-            props.onChangeSelectedKey(key);
-          }}
-        />
+        {items && (
+          <PageListResult
+            items={items}
+            onChangeSelectedKey={(key) => {
+              props.onChangeSelectedKey(key);
+            }}
+            previewValue={props.config.previewValue}
+          />
+        )}
       </div>
     </>
   );

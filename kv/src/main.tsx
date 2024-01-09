@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 // Copyright 2018-2022 the Deno authors. All rights reserved. MIT license.
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { render } from "react-dom";
 import { PageList } from "./list";
 import { PageSingle } from "./single";
 import { IconDatabase } from "./icons";
-import { KvKey, kvRequestChangeDatabase } from "./api";
+import { Config, getConfig, KvKey, kvRequestChangeDatabase } from "./api";
 import { CSSTransition } from "react-transition-group";
 
 // This script will be run within the webview itself
@@ -54,54 +54,64 @@ export type PageType = "list" | "new" | "single";
     const [prefix, setPrefix] = useState<KvKey>([]);
     const [selectedKey, setSelectedKey] = useState<KvKey>([]);
     const [database, setDatabase] = useState<string>("");
+    const [config, setConfig] = useState<Config | null>(null);
 
     const showModal = page === "new" || page === "single";
 
+    useEffect(() => {
+      (async () => {
+        setConfig(await getConfig());
+      })();
+    }, []);
+
     return (
-      <div className="page">
-        {page === "list" && (
-          <PageList
-            prefix={prefix}
+      config && (
+        <div className="page">
+          {page === "list" && (
+            <PageList
+              prefix={prefix}
+              database={database}
+              // will re-render when database changes
+              key={database}
+              onChangeSelectedKey={(key) => {
+                setSelectedKey(key);
+                setPage("single");
+              }}
+              onChangePrefix={(prefix) => {
+                setPrefix(prefix);
+              }}
+              onChangePage={(page) => setPage(page)}
+              config={config}
+            />
+          )}
+          <CSSTransition in={showModal} timeout={300} classNames="modal">
+            <div className="modal">
+              {page === "new" && (
+                <PageSingle
+                  isNewItem
+                  onChangePage={(page) => setPage(page)}
+                  onSaveNewItem={(key, value) => {
+                    setSelectedKey(key);
+                    setPage("single");
+                  }}
+                />
+              )}
+              {page === "single" && (
+                <PageSingle
+                  onChangePage={(page) => setPage(page)}
+                  selectedKey={selectedKey}
+                />
+              )}
+            </div>
+          </CSSTransition>
+          <Database
             database={database}
-            // will re-render when database changes
-            key={database}
-            onChangeSelectedKey={(key) => {
-              setSelectedKey(key);
-              setPage("single");
+            onChangeDatabase={(result) => {
+              setDatabase(result);
             }}
-            onChangePrefix={(prefix) => {
-              setPrefix(prefix);
-            }}
-            onChangePage={(page) => setPage(page)}
           />
-        )}
-        <CSSTransition in={showModal} timeout={300} classNames="modal">
-          <div className="modal">
-            {page === "new" && (
-              <PageSingle
-                isNewItem
-                onChangePage={(page) => setPage(page)}
-                onSaveNewItem={(key, value) => {
-                  setSelectedKey(key);
-                  setPage("single");
-                }}
-              />
-            )}
-            {page === "single" && (
-              <PageSingle
-                onChangePage={(page) => setPage(page)}
-                selectedKey={selectedKey}
-              />
-            )}
-          </div>
-        </CSSTransition>
-        <Database
-          database={database}
-          onChangeDatabase={(result) => {
-            setDatabase(result);
-          }}
-        />
-      </div>
+        </div>
+      )
     );
   }
 

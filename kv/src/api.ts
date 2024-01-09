@@ -11,6 +11,11 @@ export interface KvPair {
   versionstamp: string;
 }
 
+export interface Config {
+  previewValue: boolean;
+  listFetchSize: number;
+}
+
 let id = 0;
 
 export async function postMessageParent(type: string, body: object) {
@@ -65,4 +70,10 @@ export function kvRequestChangeDatabase() {
 
 export function showMessage(message: string) {
   return postMessageParent("message", { message });
+}
+
+export async function getConfig() {
+  const resultStr =
+    await (postMessageParent("getConfig", {}) as Promise<string>);
+  return JSON.parse(resultStr);
 }
