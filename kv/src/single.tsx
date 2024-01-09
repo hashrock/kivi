@@ -41,7 +41,7 @@ export function PageSingle(props: PageSingleProps) {
           valueType = "number";
           setValue(String(value));
         } else {
-          setValue(value);
+          setValue(JSON.stringify(value));
         }
         setValueType(valueType);
         setVersionstamp(result.versionstamp);
