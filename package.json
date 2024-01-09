@@ -4,7 +4,7 @@
   "description": "Deno KV viewer and editor",
   "repository": "https://github.com/hashrock/kivi",
   "license": "MIT",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "hashrock",
   "icon": "logo.png",
   "engines": {
