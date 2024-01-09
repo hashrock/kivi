@@ -49,12 +49,12 @@ export function PageSingle(props: PageSingleProps) {
     }
   }, [selectedKey]);
 
-  const getExample = `const kv = Deno.openKv();
+  const getExample = `const kv = await Deno.openKv();
 
 const res = await kv.get<string>([${JSON.stringify(newKey || [])}]);
 console.log(res); // value`;
 
-  const setExample = `const kv = Deno.openKv();
+  const setExample = `const kv = await Deno.openKv();
 
 const res = await kv.set(${JSON.stringify(newKey || [])}, ${value || ""});
 console.log(res.versionstamp);`;
