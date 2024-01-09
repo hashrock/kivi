@@ -39,14 +39,17 @@ const handler = async (request: Request): Promise<Response> => {
   const url = new URL(request.url);
   const body = await request.text();
 
-  const { type, key, value, database } = superjson.parse<RequestJson>(body);
+  const { type, key, value, database, limit, cursor } = superjson.parse<
+    RequestJson
+  >(body);
 
   if (type === "list") {
     try {
       const keys = db.list({
         prefix: key ?? [],
       }, {
-        limit: 100,
+        limit,
+        cursor,
       });
 
       const result = [];
@@ -54,7 +57,10 @@ const handler = async (request: Request): Promise<Response> => {
         result.push(key);
       }
 
-      return new Response(superjson.stringify(result), { status: 200 });
+      return new Response(
+        superjson.stringify({ result, cursor: keys.cursor }),
+        { status: 200 },
+      );
     } catch (e) {
       return new Response(
         "Failed to list items: " + e.message,

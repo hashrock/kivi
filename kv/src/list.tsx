@@ -114,6 +114,8 @@ interface PageListResultProps {
   items: KvPair[];
   onChangeSelectedKey: (key: KvKey) => void;
   previewValue?: boolean;
+  onLoadMore: () => void;
+  cursor: string | null;
 }
 function PageListResult(props: PageListResultProps) {
   const items = props.items;
@@ -133,6 +135,11 @@ function PageListResult(props: PageListResultProps) {
           previewValue={props.previewValue}
         />
       ))}
+      {props.cursor && (
+        <button onClick={props.onLoadMore}>
+          Load more
+        </button>
+      )}
     </div>
   );
 }
@@ -163,6 +170,7 @@ for await (const entry of cur) {
 export function PageList(props: PageListProps) {
   const [items, setItems] = useState<KvPair[]>([]);
   const [isBusy, setIsBusy] = useState<boolean>(false);
+  const [cursor, setCursor] = useState<string | null>(null);
 
   const menus = [{
     title: "Copy code with kv.list",
@@ -184,11 +192,21 @@ export function PageList(props: PageListProps) {
     },
   }];
 
+  async function loadMore() {
+    const { result, cursor: cursorResult } = await kvList(
+      props.prefix ?? [],
+      props.config.listFetchSize,
+      cursor ?? "",
+    );
+    setItems((prev) => [...prev, ...result]);
+    setCursor(cursorResult);
+  }
+
   useEffect(() => {
     setIsBusy(true);
+    setItems([]);
     (async () => {
-      const result = await kvList(props.prefix ?? []);
-      setItems(result);
+      await loadMore();
       setIsBusy(false);
     })();
   }, [props.prefix]);
@@ -219,6 +237,8 @@ export function PageList(props: PageListProps) {
               props.onChangeSelectedKey(key);
             }}
             previewValue={props.config.previewValue}
+            cursor={cursor}
+            onLoadMore={loadMore}
           />
         )}
       </div>

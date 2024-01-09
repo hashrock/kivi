@@ -49,6 +49,8 @@ export class KvViewProvider implements vscode.WebviewViewProvider {
       const key = data.key;
       const value = data.value;
       const database = data.database;
+      const limit = data.limit;
+      const cursor = data.cursor;
       const id = data.id;
 
       if (type === "message") {
@@ -63,6 +65,8 @@ export class KvViewProvider implements vscode.WebviewViewProvider {
         key,
         value,
         database,
+        limit,
+        cursor,
       };
 
       if (type === "changeDatabase") {

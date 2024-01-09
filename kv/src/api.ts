@@ -58,8 +58,13 @@ export function kvDelete(key: KvKey) {
   return postMessageParent("delete", { key });
 }
 
-export async function kvList(key: KvKey): Promise<KvPair[]> {
-  const resultStr = await (postMessageParent("list", { key })) as string;
+export async function kvList(
+  key: KvKey,
+  limit: number,
+  cursor: string,
+): Promise<{ result: KvPair[]; cursor: string }> {
+  const resultStr =
+    await (postMessageParent("list", { key, limit, cursor })) as string;
   return superjson.parse(resultStr);
 }
 
