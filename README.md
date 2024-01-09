@@ -2,6 +2,7 @@
 
 Deno KV Explorer
 
+[Install from VSCode marketplace](https://marketplace.visualstudio.com/items?itemName=hashrock.kivi)
 
 <img width="1061" alt="スクリーンショット 2023-11-29 21 51 39" src="https://github.com/hashrock/kivi/assets/3132889/18d6e608-71be-46e0-aa27-d8524a6c53ef">
 
