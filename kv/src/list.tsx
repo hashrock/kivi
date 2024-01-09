@@ -205,6 +205,7 @@ export function PageList(props: PageListProps) {
   useEffect(() => {
     setIsBusy(true);
     setItems([]);
+    setCursor(null);
     (async () => {
       await loadMore();
       setIsBusy(false);
