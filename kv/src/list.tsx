@@ -192,7 +192,7 @@ export function PageList(props: PageListProps) {
     },
   }];
 
-  async function loadMore() {
+  async function loadMore(cursor: string | null) {
     const { result, cursor: cursorResult } = await kvList(
       props.prefix ?? [],
       props.config.listFetchSize,
@@ -207,7 +207,7 @@ export function PageList(props: PageListProps) {
     setItems([]);
     setCursor(null);
     (async () => {
-      await loadMore();
+      await loadMore(null);
       setIsBusy(false);
     })();
   }, [props.prefix]);
@@ -239,7 +239,7 @@ export function PageList(props: PageListProps) {
             }}
             previewValue={props.config.previewValue}
             cursor={cursor}
-            onLoadMore={loadMore}
+            onLoadMore={() => loadMore(cursor)}
           />
         )}
       </div>
