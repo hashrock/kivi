@@ -19,3 +19,8 @@ Deno KV Explorer
 ## Known Issues
 
 - Objects like `Date` or `Uint8Array` will not preserved in the edit feature for now.
+
+## See also
+
+- [kview](https://github.com/kitsonk/kview) - Another Deno KV Explorer
+- [awesome-deno-kv](https://github.com/hashrock/awesome-deno-kv)
