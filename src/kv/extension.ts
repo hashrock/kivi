@@ -2,6 +2,7 @@
 
 import * as vscode from "vscode";
 import { KvViewProvider } from "./webview";
+import * as path from 'path';
 import { ChildProcess, spawn } from "child_process";
 
 let process: ChildProcess | null = null;
@@ -20,16 +21,16 @@ export function activate(context: vscode.ExtensionContext) {
     return;
   }
 
-  const serverSrc = vscode.Uri.joinPath(
-    context.extensionUri,
+  const serverSrcPath = path.join(
+    context.extensionUri.fsPath,
     "scripts",
     "kv",
-    "server.ts",
+    "server.ts"
   );
 
   process = spawn(
     "deno",
-    ["run", "-A", "--unstable", serverSrc.path],
+    ["run", "-A", "--unstable", serverSrcPath],
     {
       cwd: workspaceRoute,
     },
